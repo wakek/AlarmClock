@@ -1,0 +1,88 @@
+<WindowManager>:
+    MainWindow:
+
+<MainWindow>:
+    name: 'main'
+
+    BoxLayout:
+        ClockText:
+            font_size: 20
+
+        BoxLayout:
+            orientation: 'vertical'
+
+            ScrollView:
+                do_scroll_y: True
+                GridLayout:
+                    id: list_view
+                    cols:1
+                    height: self.minimum_height
+                    spacing: 40
+                    size_hint_y: None
+                    Label:
+                    Label:
+                        text: 'Welcome'
+                        size_hint_y: None
+                        size_hint_x: 1
+                        height: self.texture_size[1]
+                        text_size: self.width, None
+
+            GridLayout:
+                rows: 4
+                row_force_default: True
+                row_default_height: 60
+                spacing: 30
+                size_hints: 0.5, 0.5
+                BoxLayout:
+                    Spinner:
+                        id: hour_input
+                        text: 'Hour'
+                        size: 100, 44
+                        values: '01', '02', '03', '04', '18', '19'
+                        background_normal: 'Button Blue.png'
+                    Label:
+                        text: ' : '
+                    Spinner:
+                        id: minute_input
+                        text: 'Minute'
+                        size: 100, 44
+                        values: '00','01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '49','52','53','54','55','56','57','58','59'
+                        background_normal: 'Button Blue.png'
+                BoxLayout:
+                    orientation: 'vertical'
+                    spacing: 20
+                    GridLayout:
+                        id: days
+                        cols: 7
+                        row_force_default: True
+                        row_default_height: 40
+
+                        ToggleButton:
+                            text: 'Mo'
+                            background_normal: 'Button DarkerBlue.png'
+                        ToggleButton:
+                            text: 'Tu'
+                            background_normal: 'Button DarkerBlue.png'
+                        ToggleButton:
+                            text: 'We'
+                            background_normal: 'Button DarkerBlue.png'
+                        ToggleButton:
+                            text: 'Th'
+                            background_normal: 'Button DarkerBlue.png'
+                        ToggleButton:
+                            text: 'Fr'
+                            background_normal: 'Button DarkerBlue.png'
+                        ToggleButton:
+                            text: 'Sa'
+                            background_normal: 'Button DarkerBlue.png'
+                        ToggleButton:
+                            text: 'Su'
+                            background_normal: 'Button DarkerBlue.png'
+                    ToggleButton:
+                        id: repeat
+                        text: 'Repeat'
+                        background_normal: 'Button Blue.png'
+                Button:
+                    text: 'Add'
+                    on_release: root.add_alarm(hour_input.text+':'+minute_input.text, repeat.state, days, list_view)
+                    background_normal: 'Button DarkBlue.png'
