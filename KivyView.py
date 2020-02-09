@@ -30,7 +30,27 @@ class WindowManager(ScreenManager):
 
 # -------------------------------------------- Screens: Main Screen --------------------------------------------
 class MainWindow(Screen):
-    def add_alarm(self, alarm_entry, alarm_repeat, days, list_view):
+    @staticmethod
+    def set_hour_format(hour_toggle_btn, hour_input):
+        if hour_toggle_btn.state == 'normal':
+            hour_input.values = MainWindow.hours_24()
+        else:
+            hour_input.values = MainWindow.hours_12()
+
+    @staticmethod
+    def hours_24():
+        return [f"{i:02d}" for i in range(24)]
+
+    @staticmethod
+    def hours_12():
+        return [f"{i:02d}am" for i in range(1, 13)] + [f"{i:02d}pm" for i in range(1, 13)]
+
+    @staticmethod
+    def minutes():
+        return [f"{i:02d}" for i in range(60)]
+
+    @staticmethod
+    def add_alarm(alarm_entry, alarm_repeat, days, list_view):
         if 'Hour' in alarm_entry or 'Minute' in alarm_entry:
             return
         Logger.log_info_message('Adding new alarm: ' + alarm_entry)
@@ -39,6 +59,10 @@ class MainWindow(Screen):
             for day in days.children[::-1]:
                 if day.state == 'down':
                     repeat_days.append(day.text)
+        if 'pm' in alarm_entry:
+            alarm_entry = alarm_entry.replace('pm', '') + 'pm'
+        if 'am' in alarm_entry:
+            alarm_entry = alarm_entry.replace('am', '') + 'am'
         alarm_entry = '{0}, Repeat On: {1}'.format(alarm_entry, ','.join(repeat_days))
         new_alarm = Label(text=alarm_entry, size_hint=(1, None))
         new_alarm.height = new_alarm.texture_size[1]
@@ -51,10 +75,16 @@ def sound_alarms(list_view):
     for child in list_view.children[::-1]:
         if child.text == '' or child.text == 'Welcome':
             continue
+        alarm_text = child.text
+        if 'pm' in alarm_text:
+            alarm_text = alarm_text.replace('pm', '')
+        if 'am' in alarm_text:
+            alarm_text = alarm_text.replace('am', '')
         now = datetime.now()
-        alarm_time_details = child.text.split(', Repeat On:')
+        alarm_time_details = alarm_text.split(', Repeat On:')
         weekdays = {'Su': 1, 'Mo': 2, 'Tu': 3, 'We': 4, 'Th': 5, 'Fr': 6, 'Sa': 7}
-        alarm_time = now.replace(hour=int(alarm_time_details[0].split(':')[0]), minute=int(alarm_time_details[0].split(':')[1]))
+        alarm_time = now.replace(hour=int(alarm_time_details[0].split(':')[0]), minute=int(alarm_time_details[0].
+                                                                                           split(':')[1]))
         Logger.log_info_message('Comparing datetimes {} and {}'.format(now, alarm_time))
         if alarm_time_details[1] != ' ':
             alarm_repeat_days = alarm_time_details[1].split(',')

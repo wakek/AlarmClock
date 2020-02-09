@@ -34,19 +34,24 @@
                 spacing: 30
                 size_hints: 0.5, 0.5
                 BoxLayout:
-                    Spinner:
-                        id: hour_input
-                        text: 'Hour'
-                        size: 100, 44
-                        values: '01', '02', '03', '04', '18', '19'
-                        background_normal: 'Button Blue.png'
+                    BoxLayout:
+                        Spinner:
+                            id: hour_input
+                            text: 'Hour'
+                            size: 100, 44
+                            values: root.hours_24()
+                            background_normal: 'Button Blue.png'
+                        ToggleButton:
+                            text: '12-hour'
+                            background_normal: 'Button Blue.png'
+                            on_release: root.set_hour_format(self, hour_input)
                     Label:
                         text: ' : '
                     Spinner:
                         id: minute_input
                         text: 'Minute'
                         size: 100, 44
-                        values: '00','01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '49','52','53','54','55','56','57','58','59'
+                        values: root.minutes()
                         background_normal: 'Button Blue.png'
                 BoxLayout:
                     orientation: 'vertical'
